@@ -57,6 +57,7 @@ public class Article {
     @Column(name = "body", nullable = false)
     private String body;
 
+    @NotNull
     @ManyToOne(
         cascade = CascadeType.ALL,
         optional = false

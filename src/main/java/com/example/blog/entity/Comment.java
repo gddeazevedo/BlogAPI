@@ -47,6 +47,7 @@ public class Comment {
     @Column(name = "body", nullable = false)
     private String body;
 
+    @NotNull
     @ManyToOne(
         cascade = CascadeType.ALL
     )
@@ -59,6 +60,7 @@ public class Comment {
     @JsonIgnoreProperties("comments")
     private Article article;
 
+    @NotNull
     @ManyToOne(
         cascade = CascadeType.ALL
     )

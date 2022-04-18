@@ -58,6 +58,8 @@ public class Author {
     private String name;
 
     @Email
+    @NotNull
+    @NotBlank
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
