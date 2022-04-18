@@ -3,8 +3,13 @@ package com.example.blog.helper;
 import com.example.blog.entity.Author;
 import com.example.blog.exception.AuthorNotValidException;
 
-public class AuthorHelper {
-    public static void raiseExceptionIfAttributesAreNotValid(Author author) throws AuthorNotValidException {
+import org.springframework.stereotype.Component;
+
+@Component
+public class AuthorHelper implements Helper<Author> {
+
+    @Override
+    public void raiseExceptionIfAttributesAreNotValid(Author author) throws AuthorNotValidException {
         if (isNameInvalid(author) && isEmailInvalid(author)) {
             throw new AuthorNotValidException("Name and Email are either null or empty, please provide an email and name!");
         }
@@ -18,11 +23,11 @@ public class AuthorHelper {
         }
     }
 
-    private static boolean isNameInvalid(Author author) {
+    private boolean isNameInvalid(Author author) {
         return "".equals(author.getName()) || author.getName() == null;
     }
 
-    private static boolean isEmailInvalid(Author author) {
+    private boolean isEmailInvalid(Author author) {
         return "".equals(author.getEmail()) || author.getEmail() == null;
     }
 }

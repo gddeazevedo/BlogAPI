@@ -21,6 +21,9 @@ public class ArticleService {
     private ArticleRepository repository;
 
     @Autowired
+    private ArticleHelper helper;
+
+    @Autowired
     private AuthorRepository authorRepository;
 
     public List<Article> findAll() {
@@ -42,7 +45,7 @@ public class ArticleService {
     }
 
     public Article create(Long authorId, Article article) throws ArticleNotValidException, AuthorNotFoundException {
-        ArticleHelper.raiseExceptionIfAttributesAreNotValid(article);
+        helper.raiseExceptionIfAttributesAreNotValid(article);
 
         Author author = authorRepository.findById(authorId).orElseThrow(() ->
             new AuthorNotFoundException(authorId)
@@ -58,7 +61,7 @@ public class ArticleService {
             new ArticleNotFoundException(id)
         );
 
-        ArticleHelper.raiseExceptionIfAttributesAreNotValid(article);
+        helper.raiseExceptionIfAttributesAreNotValid(article);
 
         articleToUpdate.setTitle(article.getTitle());
         articleToUpdate.setBody(article.getBody());

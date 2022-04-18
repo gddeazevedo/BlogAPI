@@ -3,9 +3,13 @@ package com.example.blog.helper;
 import com.example.blog.entity.Article;
 import com.example.blog.exception.ArticleNotValidException;
 
-public class ArticleHelper {
+import org.springframework.stereotype.Component;
 
-    public static void raiseExceptionIfAttributesAreNotValid(Article article) throws ArticleNotValidException {
+@Component
+public class ArticleHelper implements Helper<Article> {
+
+    @Override
+    public void raiseExceptionIfAttributesAreNotValid(Article article) throws ArticleNotValidException {
         if (isTitleEmptyOrNull(article) && isBodyEmptyOrNull(article)) {
             throw new ArticleNotValidException("Title and body invalid! Please provide a correct title and a correct body");
         }
@@ -19,13 +23,13 @@ public class ArticleHelper {
         }
     }
 
-    private static boolean isTitleEmptyOrNull(Article article) {
+    private boolean isTitleEmptyOrNull(Article article) {
         // (min = 1, max = 50)
 
         return "".equals(article.getTitle()) || article.getTitle() == null;
     }
 
-    private static boolean isBodyEmptyOrNull(Article article) {
+    private boolean isBodyEmptyOrNull(Article article) {
         return "".equals(article.getBody()) || article.getBody() == null;
     }
 }

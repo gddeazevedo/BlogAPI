@@ -19,6 +19,9 @@ public class AuthorService {
     @Autowired
     private AuthorRepository repository;
 
+    @Autowired
+    private AuthorHelper helper;
+
     public List<Author> findAll() {
         return repository.findAll();
     }
@@ -31,7 +34,7 @@ public class AuthorService {
 
     public Author create(Author author) throws EmailAlreadyTakenException, AuthorNotValidException {
         raiseExceptionIfEmailIsTaken(author.getEmail());
-        AuthorHelper.raiseExceptionIfAttributesAreNotValid(author);
+        helper.raiseExceptionIfAttributesAreNotValid(author);
         return repository.save(author);
     }
 
@@ -40,7 +43,7 @@ public class AuthorService {
             new AuthorNotFoundException()
         );
 
-        AuthorHelper.raiseExceptionIfAttributesAreNotValid(author);
+        helper.raiseExceptionIfAttributesAreNotValid(author);
 
         authorToUpdate.setName(author.getName());
         authorToUpdate.setEmail(author.getEmail());
