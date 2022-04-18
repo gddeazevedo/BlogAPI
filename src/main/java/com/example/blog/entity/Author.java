@@ -20,6 +20,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,6 +72,7 @@ public class Author {
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties({"author", "comments"})
     @Builder.Default
     private List<Article> articles = List.of();
@@ -79,6 +83,7 @@ public class Author {
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties({"author"})
     @Builder.Default
     private List<Comment> comments = List.of();

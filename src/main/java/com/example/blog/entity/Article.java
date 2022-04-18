@@ -20,6 +20,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,10 +61,7 @@ public class Article {
     private String body;
 
     @NotNull
-    @ManyToOne(
-        cascade = CascadeType.ALL,
-        optional = false
-    )
+    @ManyToOne
     @JoinColumn(
         name = "author_id",
         referencedColumnName = "id", // Author's id
@@ -77,6 +77,7 @@ public class Article {
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @Builder.Default
     @JsonIgnoreProperties({"article"})
     private List<Comment> comments = List.of();

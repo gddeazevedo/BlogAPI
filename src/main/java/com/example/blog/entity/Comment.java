@@ -48,9 +48,7 @@ public class Comment {
     private String body;
 
     @NotNull
-    @ManyToOne(
-        cascade = CascadeType.ALL
-    )
+    @ManyToOne
     @JoinColumn(
         name = "article_id",
         referencedColumnName = "id", // Article's id
@@ -61,9 +59,7 @@ public class Comment {
     private Article article;
 
     @NotNull
-    @ManyToOne(
-        cascade = CascadeType.ALL
-    )
+    @ManyToOne
     @JoinColumn(
         name = "author_id",
         referencedColumnName = "id", // Author's id
