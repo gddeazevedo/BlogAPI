@@ -8,10 +8,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +30,15 @@ import lombok.NoArgsConstructor;
 public class Comment {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+        name = "comments_sequence",
+        sequenceName = "comments_sequence",
+        allocationSize = 1
+    )
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "comments_sequence"
+    )
     private Long id;
 
     @NotNull
@@ -45,6 +56,7 @@ public class Comment {
         nullable = false,
         updatable = false
     )
+    @JsonIgnoreProperties("comments")
     private Article article;
 
     @ManyToOne(
@@ -56,6 +68,7 @@ public class Comment {
         nullable = false,
         updatable = false
     )
+    @JsonIgnoreProperties(value = {"articles", "comments"})
     private Author author;
 
     public Comment(String body, Article article, Author author) {

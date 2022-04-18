@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,7 +67,17 @@ public class Author {
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties({"author", "comments"})
     @Builder.Default
     private List<Article> articles = List.of();
+
+    @OneToMany(
+        mappedBy = "author",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    @JsonIgnoreProperties({"author"})
+    @Builder.Default
+    private List<Comment> comments = List.of();
 }
