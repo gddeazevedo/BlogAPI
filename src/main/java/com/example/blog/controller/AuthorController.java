@@ -2,7 +2,7 @@ package com.example.blog.controller;
 
 import java.util.List;
 
-import com.example.blog.entity.Author;
+import com.example.blog.dto.request.AuthorDTO;
 import com.example.blog.exception.AuthorNotFoundException;
 import com.example.blog.exception.AuthorNotValidException;
 import com.example.blog.exception.EmailAlreadyTakenException;
@@ -28,31 +28,32 @@ public class AuthorController {
     private AuthorService service;
 
     @GetMapping
-    public List<Author> findAll() {
+    public List<AuthorDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Author findBy(@PathVariable("id") Long id) throws AuthorNotFoundException {
+    public AuthorDTO findBy(@PathVariable("id") Long id) throws AuthorNotFoundException {
         return service.findBy(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Author create(@RequestBody Author author) throws EmailAlreadyTakenException, AuthorNotValidException {
-        return service.create(author);
+    public AuthorDTO create(@RequestBody AuthorDTO authorDTO) throws EmailAlreadyTakenException, AuthorNotValidException {
+        return service.create(authorDTO);
     }
 
     @PutMapping("/{id}")
-    public Author update(
+    public AuthorDTO update(
         @PathVariable("id") Long id,
-        @RequestBody Author author
+        @RequestBody AuthorDTO authorDTO
     ) throws AuthorNotFoundException, AuthorNotValidException
     {
-        return service.update(id, author);
+        return service.update(id, authorDTO);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) throws AuthorNotFoundException {
         service.delete(id);
     }

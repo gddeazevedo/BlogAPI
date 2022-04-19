@@ -1,35 +1,36 @@
 package com.example.blog.helper;
 
+import com.example.blog.dto.request.ArticleDTO;
 import com.example.blog.entity.Article;
 import com.example.blog.exception.ArticleNotValidException;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class ArticleHelper implements Helper<Article> {
+public class ArticleHelper implements Helper<ArticleDTO> {
 
     @Override
-    public void raiseExceptionIfAttributesAreNotValid(Article article) throws ArticleNotValidException {
-        if (isTitleEmptyOrNull(article) && isBodyEmptyOrNull(article)) {
+    public void raiseExceptionIfAttributesAreNotValid(ArticleDTO articleDTO) throws ArticleNotValidException {
+        if (isTitleEmptyOrNull(articleDTO.getTitle()) && isBodyEmptyOrNull(articleDTO.getBody())) {
             throw new ArticleNotValidException("Title and body invalid! Please provide a correct title and a correct body");
         }
 
-        if (isTitleEmptyOrNull(article)) {
+        if (isTitleEmptyOrNull(articleDTO.getTitle())) {
             throw new ArticleNotValidException("Title is empty or null. Please add a title!");
         }
 
-        if (isBodyEmptyOrNull(article)) {
+        if (isBodyEmptyOrNull(articleDTO.getBody())) {
             throw new ArticleNotValidException("Body is empty or null. Please add a body!");
         }
     }
 
-    private boolean isTitleEmptyOrNull(Article article) {
+    private boolean isTitleEmptyOrNull(String title) {
         // (min = 1, max = 50)
 
-        return "".equals(article.getTitle()) || article.getTitle() == null;
+        return "".equals(title) || title == null;
     }
 
-    private boolean isBodyEmptyOrNull(Article article) {
-        return "".equals(article.getBody()) || article.getBody() == null;
+    private boolean isBodyEmptyOrNull(String body) {
+        return "".equals(body) || body == null;
     }
 }

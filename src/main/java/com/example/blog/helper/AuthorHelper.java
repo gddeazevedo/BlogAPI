@@ -1,33 +1,34 @@
 package com.example.blog.helper;
 
+import com.example.blog.dto.request.AuthorDTO;
 import com.example.blog.entity.Author;
 import com.example.blog.exception.AuthorNotValidException;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthorHelper implements Helper<Author> {
+public class AuthorHelper implements Helper<AuthorDTO> {
 
     @Override
-    public void raiseExceptionIfAttributesAreNotValid(Author author) throws AuthorNotValidException {
-        if (isNameInvalid(author) && isEmailInvalid(author)) {
+    public void raiseExceptionIfAttributesAreNotValid(AuthorDTO authorDTO) throws AuthorNotValidException {
+        if (isNameInvalid(authorDTO.getName()) && isEmailInvalid(authorDTO.getEmail())) {
             throw new AuthorNotValidException("Name and Email are either null or empty, please provide an email and name!");
         }
 
-        if (isNameInvalid(author)) {
+        if (isNameInvalid(authorDTO.getName())) {
             throw new AuthorNotValidException("Name is either empty or null. Plase provide a name!");
         }
 
-        if (isEmailInvalid(author)) {
+        if (isEmailInvalid(authorDTO.getEmail())) {
             throw new AuthorNotValidException("Email is either empty or null. Please provide an email!");
         }
     }
 
-    private boolean isNameInvalid(Author author) {
-        return "".equals(author.getName()) || author.getName() == null;
+    private boolean isNameInvalid(String name) {
+        return "".equals(name) || name == null;
     }
 
-    private boolean isEmailInvalid(Author author) {
-        return "".equals(author.getEmail()) || author.getEmail() == null;
+    private boolean isEmailInvalid(String email) {
+        return "".equals(email) || email == null;
     }
 }

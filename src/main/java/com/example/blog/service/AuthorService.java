@@ -2,19 +2,24 @@ package com.example.blog.service;
 
 import com.example.blog.repository.AuthorRepository;
 import com.example.blog.entity.Author;
+import com.example.blog.dto.request.AuthorDTO;
 import com.example.blog.exception.AuthorNotFoundException;
 import com.example.blog.exception.AuthorNotValidException;
 import com.example.blog.exception.EmailAlreadyTakenException;
 import com.example.blog.helper.AuthorHelper;
+import com.example.blog.mapper.AuthorMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
+
+    AuthorMapper mapper = AuthorMapper.INSTANCE;
     
     @Autowired
     private AuthorRepository repository;
@@ -22,33 +27,41 @@ public class AuthorService {
     @Autowired
     private AuthorHelper helper;
 
-    public List<Author> findAll() {
-        return repository.findAll();
+    public List<AuthorDTO> findAll() {
+        return repository.findAll()
+            .stream()
+            .map(mapper::toDTO)
+            .collect(Collectors.toList());
     }
 
-    public Author findBy(Long id) throws AuthorNotFoundException {
-        return repository.findById(id).orElseThrow(() ->
+    public AuthorDTO findBy(Long id) throws AuthorNotFoundException {
+        Author author = repository.findById(id).orElseThrow(() ->
             new AuthorNotFoundException(id)
         );
+
+        return mapper.toDTO(author);
     }
 
-    public Author create(Author author) throws EmailAlreadyTakenException, AuthorNotValidException {
-        raiseExceptionIfEmailIsTaken(author.getEmail());
-        helper.raiseExceptionIfAttributesAreNotValid(author);
-        return repository.save(author);
+    public AuthorDTO create(AuthorDTO authorDTO) throws EmailAlreadyTakenException, AuthorNotValidException {
+        raiseExceptionIfEmailIsTaken(authorDTO.getEmail());
+        helper.raiseExceptionIfAttributesAreNotValid(authorDTO);
+
+        Author author = mapper.toModel(authorDTO);
+
+        return mapper.toDTO(repository.save(author));
     }
 
-    public Author update(Long id, Author author) throws AuthorNotFoundException, AuthorNotValidException {
+    public AuthorDTO update(Long id, AuthorDTO authorDTO) throws AuthorNotFoundException, AuthorNotValidException {
         Author authorToUpdate = repository.findById(id).orElseThrow(() ->
             new AuthorNotFoundException()
         );
 
-        helper.raiseExceptionIfAttributesAreNotValid(author);
+        helper.raiseExceptionIfAttributesAreNotValid(authorDTO);
 
-        authorToUpdate.setName(author.getName());
-        authorToUpdate.setEmail(author.getEmail());
+        authorToUpdate.setName(authorDTO.getName());
+        authorToUpdate.setEmail(authorDTO.getEmail());
 
-        return repository.save(authorToUpdate);
+        return mapper.toDTO(repository.save(authorToUpdate));
     }
 
     public void delete(Long id) throws AuthorNotFoundException {
