@@ -19,7 +19,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +31,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Article {
 
     @Id
@@ -69,6 +67,7 @@ public class Article {
         fetch = FetchType.LAZY
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<Comment> comments;
 
     public Article(String title, String body) {

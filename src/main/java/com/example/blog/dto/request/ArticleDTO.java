@@ -33,10 +33,10 @@ public class ArticleDTO {
     @Size(min = 5, max = 300)
     private String body;
 
-    @JsonIgnoreProperties({"articles", "comments"})
-    private AuthorDTO author;
+    @NotNull
+    private Long authorId;
 
-    @JsonIgnoreProperties({"article"})
+    @JsonIgnoreProperties({"articleId"})
     @Builder.Default
     private List<CommentDTO> comments = List.of();
 }

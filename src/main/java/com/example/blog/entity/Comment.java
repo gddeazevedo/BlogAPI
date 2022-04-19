@@ -1,6 +1,5 @@
 package com.example.blog.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,23 +9,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "Comment")
 @Table(name = "comments")
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Comment {
     
     @Id
@@ -41,13 +37,9 @@ public class Comment {
     )
     private Long id;
 
-    @NotNull
-    @NotBlank
-    @Size(min = 1, max = 150)
     @Column(name = "body", nullable = false)
     private String body;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(
         name = "article_id",
@@ -55,10 +47,9 @@ public class Comment {
         nullable = false,
         updatable = false
     )
-    @JsonIgnoreProperties("comments")
+    @ToString.Exclude
     private Article article;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(
         name = "author_id",
@@ -66,7 +57,6 @@ public class Comment {
         nullable = false,
         updatable = false
     )
-    @JsonIgnoreProperties(value = {"articles", "comments"})
     private Author author;
 
     public Comment(String body, Article article, Author author) {

@@ -34,11 +34,11 @@ public class AuthorDTO {
     @NotEmpty
     private String email;
 
-    @JsonIgnoreProperties({"author", "comments"})
+    @JsonIgnoreProperties({"comments"})
     @Builder.Default
     private List<ArticleDTO> articles = List.of();
 
-    @JsonIgnoreProperties({"author"})
+    @JsonIgnoreProperties({"authorId"})
     @Builder.Default
     private List<CommentDTO> comments = List.of();
 }
