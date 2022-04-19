@@ -13,20 +13,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "Author")
 @Table(
@@ -36,10 +31,11 @@ import lombok.NoArgsConstructor;
         columnNames = "email"
     )
 )
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Author {
 
     @Id
@@ -54,15 +50,9 @@ public class Author {
     )
     private Long id;
 
-    @NotBlank
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Email
-    @NotNull
-    @NotBlank
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
@@ -73,9 +63,8 @@ public class Author {
         fetch = FetchType.LAZY
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties({"author", "comments"})
-    @Builder.Default
-    private List<Article> articles = List.of();
+    @ToString.Exclude
+    private List<Article> articles;
 
     @OneToMany(
         mappedBy = "author",
@@ -84,7 +73,6 @@ public class Author {
         fetch = FetchType.LAZY
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties({"author"})
-    @Builder.Default
-    private List<Comment> comments = List.of();
+    @ToString.Exclude
+    private List<Comment> comments;
 }
