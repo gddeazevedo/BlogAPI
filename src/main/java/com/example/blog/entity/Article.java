@@ -14,23 +14,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "Article")
 @Table(name = "articles")
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -48,19 +47,12 @@ public class Article {
     )
     private Long id;
 
-    @NotBlank
-    @NotNull
-    @Size(min = 1, max = 50)
     @Column(name = "title", nullable = false)
     private String title;
 
-    @NotBlank
-    @NotNull
-    @Size(min = 5, max = 300)
     @Column(name = "body", nullable = false)
     private String body;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(
         name = "author_id",
@@ -68,7 +60,6 @@ public class Article {
         nullable = false,
         updatable = false
     )
-    @JsonIgnoreProperties({"articles", "comments"})
     private Author author;
 
     @OneToMany(
@@ -78,9 +69,7 @@ public class Article {
         fetch = FetchType.LAZY
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @Builder.Default
-    @JsonIgnoreProperties({"article"})
-    private List<Comment> comments = List.of();
+    private List<Comment> comments;
 
     public Article(String title, String body) {
         this.title = title;
