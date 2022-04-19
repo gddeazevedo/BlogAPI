@@ -1,7 +1,6 @@
 package com.example.blog.helper;
 
 import com.example.blog.dto.request.ArticleDTO;
-import com.example.blog.entity.Article;
 import com.example.blog.exception.ArticleNotValidException;
 
 import org.springframework.stereotype.Component;

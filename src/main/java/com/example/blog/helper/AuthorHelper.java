@@ -1,7 +1,6 @@
 package com.example.blog.helper;
 
 import com.example.blog.dto.request.AuthorDTO;
-import com.example.blog.entity.Author;
 import com.example.blog.exception.AuthorNotValidException;
 
 import org.springframework.stereotype.Component;
