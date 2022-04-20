@@ -45,6 +45,11 @@ public class ArticleService {
         return toDTOList(articles);
     }
 
+    public List<ArticleDTO> findByTitleAndAuthor(String title, Long authorId) {
+        List<Article> articles = repository.findAllByTitleAndAuthor(title, authorId);
+        return toDTOList(articles);
+    } 
+
     public ArticleDTO findBy(Long id) throws ArticleNotFoundException {
         Article article = repository.findById(id).orElseThrow(() ->
             new ArticleNotFoundException(id)

@@ -1,8 +1,5 @@
 package com.example.blog.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.example.blog.entity.Comment;
 import com.example.blog.exception.ArticleNotFoundException;
 import com.example.blog.exception.AuthorNotFoundException;
@@ -36,34 +33,6 @@ public class CommentService {
 
     @Autowired
     private AuthorRepository authorRepository;
-
-    public List<CommentDTO> findAll() {
-        List<Comment> comments = repository.findAll();
-        return toDTOList(comments);
-    }
-
-    public List<CommentDTO> findAllByAuthor(Long authorId) {
-        List<Comment> comments = repository.findAllByAuthor(authorId);
-        return toDTOList(comments);
-    }
-
-    public List<CommentDTO> findAllByArticle(Long articleId) {
-        List<Comment> comments = repository.findAllByArticle(articleId);
-        return toDTOList(comments);
-    }
-
-    public List<CommentDTO> findAllByArticleAndAuthor(Long articleId, Long authorId) {
-        List<Comment> comments = repository.findAllByArticleAndAuthor(articleId, authorId);
-        return toDTOList(comments);
-    }
-
-    public CommentDTO findBy(Long id) throws CommentNotFoundException {
-        Comment comment = repository.findById(id).orElseThrow(() ->
-            new CommentNotFoundException(id)
-        );
-
-        return mapper.toDTO(comment);
-    }
 
     public CommentDTO create(CommentDTO commentDTO) throws ArticleNotFoundException, AuthorNotFoundException, CommentNotValidException {
         Long articleId = commentDTO.getArticleId();
@@ -105,11 +74,5 @@ public class CommentService {
         );
 
         repository.delete(comment);
-    }
-
-    private List<CommentDTO> toDTOList(List<Comment> comments) {
-        return comments.stream()
-            .map(mapper::toDTO)
-            .collect(Collectors.toList());
     }
 }

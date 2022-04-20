@@ -18,4 +18,13 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
         nativeQuery = true
     )
     List<Article> findAllByAuthor(@Param("author_id") Long authorId);
+
+    @Query(
+        nativeQuery = true,
+        value = "SELECT * FROM articles WHERE title = :title AND author_id = :author_id"
+    )
+    List<Article> findAllByTitleAndAuthor(
+        @Param("title") String title,
+        @Param("author_id") Long authorId
+    );
 }

@@ -34,10 +34,24 @@ public class ArticleController {
             required = false,
             name = "title"
         )
-        String title
+        String title,
+
+        @RequestParam(
+            required = false,
+            name = "authorId"
+        )
+        Long authorId
     ) {
+        if (title != null && authorId != null) {
+            return service.findByTitleAndAuthor(title, authorId);
+        }
+
         if (title != null) {
             return service.findBy(title);
+        }
+
+        if (authorId != null) {
+            return service.findByAuthor(authorId);
         }
 
         return service.findAll();
