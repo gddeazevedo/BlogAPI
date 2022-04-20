@@ -37,8 +37,4 @@ public class AuthorDTO {
     @JsonIgnoreProperties({"comments", "authorId"})
     @Builder.Default
     private List<ArticleDTO> articles = List.of();
-
-    @JsonIgnoreProperties({"authorId"})
-    @Builder.Default
-    private List<CommentDTO> comments = List.of();
 }

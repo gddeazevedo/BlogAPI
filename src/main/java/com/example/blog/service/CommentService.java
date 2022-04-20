@@ -1,6 +1,7 @@
 package com.example.blog.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.blog.entity.Comment;
 import com.example.blog.exception.ArticleNotFoundException;
@@ -8,6 +9,8 @@ import com.example.blog.exception.AuthorNotFoundException;
 import com.example.blog.exception.CommentNotFoundException;
 import com.example.blog.exception.CommentNotValidException;
 import com.example.blog.helper.CommentHelper;
+import com.example.blog.mapper.CommentMapper;
+import com.example.blog.dto.request.CommentDTO;
 import com.example.blog.entity.Article;
 import com.example.blog.entity.Author;
 import com.example.blog.repository.CommentRepository;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
+
+    private CommentMapper mapper = CommentMapper.INSTANCE;
     
     @Autowired
     private CommentRepository repository;
@@ -32,30 +37,39 @@ public class CommentService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public List<Comment> findAll() {
-        return repository.findAll();
+    public List<CommentDTO> findAll() {
+        List<Comment> comments = repository.findAll();
+        return toDTOList(comments);
     }
 
-    public List<Comment> findAllByAuthor(Long authorId) {
-        return repository.findAllByAuthor(authorId);
+    public List<CommentDTO> findAllByAuthor(Long authorId) {
+        List<Comment> comments = repository.findAllByAuthor(authorId);
+        return toDTOList(comments);
     }
 
-    public List<Comment> findAllByArticle(Long articleId) {
-        return repository.findAllByArticle(articleId);
+    public List<CommentDTO> findAllByArticle(Long articleId) {
+        List<Comment> comments = repository.findAllByArticle(articleId);
+        return toDTOList(comments);
     }
 
-    public List<Comment> findAllByArticleAndAuthor(Long articleId, Long authorId) {
-        return repository.findAllByArticleAndAuthor(articleId, authorId);
+    public List<CommentDTO> findAllByArticleAndAuthor(Long articleId, Long authorId) {
+        List<Comment> comments = repository.findAllByArticleAndAuthor(articleId, authorId);
+        return toDTOList(comments);
     }
 
-    public Comment findBy(Long id) throws CommentNotFoundException {
-        return repository.findById(id).orElseThrow(() ->
+    public CommentDTO findBy(Long id) throws CommentNotFoundException {
+        Comment comment = repository.findById(id).orElseThrow(() ->
             new CommentNotFoundException(id)
         );
+
+        return mapper.toDTO(comment);
     }
 
-    public Comment create(Long articleId, Long authorId, Comment comment) throws ArticleNotFoundException, AuthorNotFoundException, CommentNotValidException {
-        Article article = articleRepository.findById(authorId).orElseThrow(() ->
+    public CommentDTO create(CommentDTO commentDTO) throws ArticleNotFoundException, AuthorNotFoundException, CommentNotValidException {
+        Long articleId = commentDTO.getArticleId();
+        Long authorId = commentDTO.getAuthorId();
+        
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
             new ArticleNotFoundException(articleId)
         );
 
@@ -63,24 +77,26 @@ public class CommentService {
             new AuthorNotFoundException(authorId)
         );
 
-        helper.raiseExceptionIfAttributesAreNotValid(comment);
+        helper.raiseExceptionIfAttributesAreNotValid(commentDTO);
+
+        Comment comment = mapper.toModel(commentDTO);
 
         comment.setAuthor(author);
         comment.setArticle(article);
 
-        return repository.save(comment);
+        return mapper.toDTO(repository.save(comment));
     }
 
-    public Comment update(Long id, Comment comment) throws CommentNotFoundException, CommentNotValidException {
+    public CommentDTO update(Long id, CommentDTO commentDTO) throws CommentNotFoundException, CommentNotValidException {
         Comment commentToUpdate = repository.findById(id).orElseThrow(() ->
             new CommentNotFoundException(id)
         );
 
-        helper.raiseExceptionIfAttributesAreNotValid(comment);
+        helper.raiseExceptionIfAttributesAreNotValid(commentDTO);
 
-        commentToUpdate.setBody(comment.getBody());
+        commentToUpdate.setBody(commentDTO.getBody());
 
-        return repository.save(commentToUpdate);
+        return mapper.toDTO(repository.save(commentToUpdate));
     }
 
     public void delete(Long id) throws CommentNotFoundException {
@@ -89,5 +105,11 @@ public class CommentService {
         );
 
         repository.delete(comment);
+    }
+
+    private List<CommentDTO> toDTOList(List<Comment> comments) {
+        return comments.stream()
+            .map(mapper::toDTO)
+            .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.blog.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,7 +51,9 @@ public class Comment {
     @ToString.Exclude
     private Article article;
 
-    @ManyToOne
+    @ManyToOne(
+        cascade = CascadeType.ALL
+    )
     @JoinColumn(
         name = "author_id",
         referencedColumnName = "id", // Author's id

@@ -65,14 +65,4 @@ public class Author {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<Article> articles;
-
-    @OneToMany(
-        mappedBy = "author",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true,
-        fetch = FetchType.LAZY
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude
-    private List<Comment> comments;
 }

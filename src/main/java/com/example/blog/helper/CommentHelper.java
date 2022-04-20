@@ -1,16 +1,16 @@
 package com.example.blog.helper;
 
-import com.example.blog.entity.Comment;
+import com.example.blog.dto.request.CommentDTO;
 import com.example.blog.exception.CommentNotValidException;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentHelper implements Helper<Comment> {
+public class CommentHelper implements Helper<CommentDTO> {
 
     @Override
-    public void raiseExceptionIfAttributesAreNotValid(Comment comment) throws CommentNotValidException {
-        if (isBodyInvalid(comment.getBody())) {
+    public void raiseExceptionIfAttributesAreNotValid(CommentDTO commentDTO) throws CommentNotValidException {
+        if (isBodyInvalid(commentDTO.getBody())) {
             throw new CommentNotValidException("Body is null or empty! Please provide a body!");
         }
     }
